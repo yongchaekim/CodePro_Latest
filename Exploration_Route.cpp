@@ -21,13 +21,20 @@ int main() {
 
     int R, C;
     cin >> R >> C;
+	
+		// Input graph as string
     vector<string> g(R);
     for (int i = 0; i < R; i++) cin >> g[i];
 
+		// Make starting data and create vector of digit to store position
     DATA S{-1, -1};
     vector<DATA> digit(10, {-1, -1});
     int n = 0;
-
+	
+		// Process the data of the graph. 
+		// If the chracter is 'S' then save the Starting data. 
+		// If the character is between 1 to 9, change to digits and save the position of the digits
+		// get max digit,
     for (int r = 0; r < R; r++) {
         for (int c = 0; c < C; c++) {
             char ch = g[r][c];
@@ -40,6 +47,7 @@ int main() {
         }
     }
 
+		// If the max digit is 0, then there is no need to compute so return answer as 0
     if (n == 0) { cout << 0 << "\n"; return 0; }
 
     // nodes: 0 = S, 1..n = digits
@@ -48,6 +56,7 @@ int main() {
     for (int i = 1; i <= n; i++) nodes[i] = digit[i];
 
     // D[i][j] = shortest distance from nodes[i] to nodes[j]
+	  // Dijkstra's Algorithm
     vector<vector<int>> D(n + 1, vector<int>(n + 1, INF));
 
     for (int i = 0; i <= n; i++) {
@@ -61,7 +70,9 @@ int main() {
             DATA cur = q.front(); q.pop();
             for (int k = 0; k < 4; k++) {
                 int nr = cur.r + dr[k], nc = cur.c + dc[k];
+								// Check boundary of the graph
                 if (nr < 0 || nr >= R || nc < 0 || nc >= C) continue;
+								// Check walls
                 if (g[nr][nc] == '*') continue;
                 if (dist[nr][nc] != -1) continue;
                 dist[nr][nc] = dist[cur.r][cur.c] + 1;
