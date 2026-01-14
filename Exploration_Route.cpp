@@ -102,7 +102,8 @@ int Solve() {
         }
     }
 	
-		// Use Bitwise Traveling Sales Problem to find the shortest Path. Dynamic Programming
+		// Use Bitwise Traveling Sales Problem to find the shortest Path. Dynamic Programming !!!
+
 	
 	int FULL = (1 << N) - 1;
     vector<vector<int>> dp(1 << N, vector<int>(N + 1, INF));
@@ -125,6 +126,14 @@ int Solve() {
     for (int last = 1; last <= N; last++) {
         ans = min(ans, dp[FULL][last] + D[last][0]);
     }
+	
+		/*
+		If problem does not need to return to S at the end
+		int ans = INF;
+		for (int last = 1; last <= N; last++) {
+			ans = min(an, dp[FULL][last]);
+		}
+		*/
 		
 
    return ans;
