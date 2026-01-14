@@ -1,40 +1,37 @@
 #include <iostream>
 #include <vector>
-#include <string>
-#include <queue>
 #include <algorithm>
+#include <queue>
+#include <string>
 
 using namespace std;
 
-struct DATA { 
-	int r, c; 
+static const int INF = 1000000000;
+
+int R, C, N;
+vector<string> g; // resize after reading R,C
+
+struct DATA {
+    int r;
+    int c;
 };
 
-const int INF = 1e9;
-int dr[4] = {-1, 1, 0, 0};
-int dc[4] = {0, 0, -1, 1};
+vector<DATA> digit(10, DATA{-1, -1});
 
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-		cout.tie(nullptr);
+int dr[4] = {0, 1, 0, -1};
+int dc[4] = {1, 0, -1, 0};
 
-    int R, C;
+void Input_Data(void) {
     cin >> R >> C;
-	
-		// Input graph as string
-    vector<string> g(R);
+    g.resize(R);
     for (int i = 0; i < R; i++) cin >> g[i];
+}
 
-		// Make starting data and create vector of digit to store position
+int Solve() {
+    // find start + digits
     DATA S{-1, -1};
-    vector<DATA> digit(10, {-1, -1});
-    int n = 0;
-	
-		// Process the data of the graph. 
-		// If the chracter is 'S' then save the Starting data. 
-		// If the character is between 1 to 9, change to digits and save the position of the digits
-		// get max digit,
+    N = 0;
+
     for (int r = 0; r < R; r++) {
         for (int c = 0; c < C; c++) {
             char ch = g[r][c];
@@ -42,24 +39,40 @@ int main() {
             if ('1' <= ch && ch <= '9') {
                 int d = ch - '0';
                 digit[d] = {r, c};
-                n = max(n, d);
+                N = max(N, d);
             }
         }
     }
 
-		// If the max digit is 0, then there is no need to compute so return answer as 0
-    if (n == 0) { cout << 0 << "\n"; return 0; }
-
-    // nodes: 0 = S, 1..n = digits
-    vector<DATA> nodes(n + 1);
+    if (S.r == -1) return -1;     // no start
+    if (N == 0) return 0;         // no targets
+	
+		// build nodes: 0 = S, 1..N = digits
+    vector<DATA> nodes(N + 1);
     nodes[0] = S;
-    for (int i = 1; i <= n; i++) nodes[i] = digit[i];
+    for (int i = 1; i <= N; i++) {
+        if (digit[i].r == -1) return -1; // missing required digit
+        nodes[i] = digit[i];
+    }
+	
+		
+		// pairwise distances by BFS from each node transforming D in the distance by distance graph
+	  /*
+		  S 1 2 3 4 5 6 7 8 9
+		S 
+		1
+		2
+		3
+		4
+		5
+		6
+		7
+		8
+		9
+		*/
+    vector<vector<int>> D(N + 1, vector<int>(N + 1, INF));
 
-    // D[i][j] = shortest distance from nodes[i] to nodes[j]
-	  // Dijkstra's Algorithm
-    vector<vector<int>> D(n + 1, vector<int>(n + 1, INF));
-
-    for (int i = 0; i <= n; i++) {
+    for (int i = 0; i <= N; i++) {
         vector<vector<int>> dist(R, vector<int>(C, -1));
         queue<DATA> q;
 
@@ -67,35 +80,39 @@ int main() {
         q.push(nodes[i]);
 
         while (!q.empty()) {
-            DATA cur = q.front(); q.pop();
+            DATA cur = q.front();
+            q.pop();
+
             for (int k = 0; k < 4; k++) {
-                int nr = cur.r + dr[k], nc = cur.c + dc[k];
-								// Check boundary of the graph
+                int nr = cur.r + dr[k];
+                int nc = cur.c + dc[k];
+
                 if (nr < 0 || nr >= R || nc < 0 || nc >= C) continue;
-								// Check walls
                 if (g[nr][nc] == '*') continue;
                 if (dist[nr][nc] != -1) continue;
+
                 dist[nr][nc] = dist[cur.r][cur.c] + 1;
                 q.push({nr, nc});
             }
         }
 
-        for (int j = 0; j <= n; j++) {
+        for (int j = 0; j <= N; j++) {
             int d = dist[nodes[j].r][nodes[j].c];
             if (d != -1) D[i][j] = d;
         }
     }
-
-    // dp[mask][last] = min distance starting at S, visiting digits in mask, ending at node 'last'
-    int FULL = (1 << n) - 1;
-    vector<vector<int>> dp(1 << n, vector<int>(n + 1, INF));
+	
+		// Use Bitwise Traveling Sales Problem to find the shortest Path. Dynamic Programming
+	
+	int FULL = (1 << N) - 1;
+    vector<vector<int>> dp(1 << N, vector<int>(N + 1, INF));
     dp[0][0] = 0;
 
     for (int mask = 0; mask <= FULL; mask++) {
-        for (int last = 0; last <= n; last++) {
+        for (int last = 0; last <= N; last++) {
             if (dp[mask][last] == INF) continue;
 
-            for (int nxt = 1; nxt <= n; nxt++) {
+            for (int nxt = 1; nxt <= N; nxt++) {
                 int bit = 1 << (nxt - 1);
                 if (mask & bit) continue;
                 dp[mask | bit][nxt] = min(dp[mask | bit][nxt], dp[mask][last] + D[last][nxt]);
@@ -105,10 +122,20 @@ int main() {
 
     // Return to S at the end (required to get 18 for the sample)
     int ans = INF;
-    for (int last = 1; last <= n; last++) {
+    for (int last = 1; last <= N; last++) {
         ans = min(ans, dp[FULL][last] + D[last][0]);
     }
+		
 
-    cout << ans << "\n";
+   return ans;
+}
+
+int main(void) {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    Input_Data();
+    int sol = Solve();
+    cout << sol << '\n';
     return 0;
 }
