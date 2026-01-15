@@ -70,6 +70,9 @@ void Solve() {
 		}
 	}
 	
+	// Bigger Z wins
+	// If tie Bigger, C wins
+	// If tie Bigger Rank Owner R > G > B
 		
 	for (auto &iter : zones) {
     char ch = iter.first;
@@ -97,4 +100,5 @@ int main() {
 	cout << ans << " " << areacnt << "\n";// 출력하는 부분 Output
 	return 0;
 }
+
 
