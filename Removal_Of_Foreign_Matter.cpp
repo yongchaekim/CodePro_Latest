@@ -1,4 +1,6 @@
 #include <iostream>
+#include <algorithm>
+
 using namespace std;
 
 int N; // 이물질의 개수
@@ -12,6 +14,11 @@ void InputData() {
 	}
 }
 
+bool compare(int a, int b) {
+	return a < b;
+}
+
+/*
 int BinarySearch(int s, int e, int d) {
 	while(s<=e) {
 		int m=(s+e)/2;
@@ -51,18 +58,22 @@ int BinarySearchUpper(int s, int e, int d) {
 		}
 	}
 }
-
+*/
 
 void Solve() {
 
-	
+	sort(X, X+N, compare);
 }
 
 int main() {
 	int ans = -1;
 	InputData(); // 입력 받는 부분
-
 	
+	Solve();
+
+	for(int i=0; i<N; i++)
+		cout << X[i] << " ";
+		cout << endl;
 	
 	// 여기서부터 작성
 	cout << ans << endl;// 출력하는 부분
