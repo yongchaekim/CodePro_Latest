@@ -9,8 +9,8 @@ using namespace std;
 #define MAXN (100)
 int N;
 vector<string> g;
-char bestowner=0;
-int bestcount=-1;
+char bestowner='B';
+int bestcount, bestcells;
 
 int dr[] = {0, 1, 0, -1};
 int dc[] = {-1, 0, 1, 0};
@@ -27,10 +27,17 @@ void InputData() {
 	}
 }
 
+int rankOwner(char ch) {
+    if (ch == 'R') return 3;
+    if (ch == 'G') return 2;
+    return 1; // 'B'
+}
+
 void Solve() {
 	
 	vector<vector<bool>> visited(N, vector<bool>(N, false));
 	map<char,int> zones;
+	map<char,int> cells;
 	
 	for(int r=0; r<N; r++) {
 		for(int c=0; c<N; c++) {
@@ -40,6 +47,7 @@ void Solve() {
 			visited[r][c] = true;
 			char owner = g[r][c];
 			zones[owner]++;
+			cells[owner]++;
 			
 			queue<DATA> q;
 			q.push({r, c});
@@ -54,16 +62,22 @@ void Solve() {
 					if(visited[nr][nc]) continue;
 					q.push({nr, nc});
 					visited[nr][nc] = true;
+					cells[owner]++;
 				}
 			}
 		}
 	}
-		
+	
 		
 	for (auto &iter : zones) {
-    if (iter.second > bestcount || (iter.second == bestcount && iter.first > bestowner)) {
-        bestowner = iter.first;
-        bestcount = iter.second;
+    char ch = iter.first;
+    int z = iter.second;
+    int c = cells[ch]; // cells must be computed already
+
+    if (z > bestcount || (z == bestcount && c > bestcells) || (z == bestcount && c == bestcells && rankOwner(ch) > rankOwner(bestowner))) {
+        bestowner = ch;
+        bestcount = z;
+			  bestcells = c; 
     }
 	}
 
