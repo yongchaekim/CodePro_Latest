@@ -9,8 +9,10 @@ using namespace std;
 #define MAXN (100)
 int N;
 vector<string> g;
-char bestowner='B';
-int bestcount, bestcells;
+
+char ans;//구매자 이름 Buyer's name
+int areacnt;//구매자 영역 개수 Number of buyer's area
+int cellcnt;
 
 int dr[] = {0, 1, 0, -1};
 int dc[] = {-1, 0, 1, 0};
@@ -74,10 +76,10 @@ void Solve() {
     int z = iter.second;
     int c = cells[ch]; // cells must be computed already
 
-    if (z > bestcount || (z == bestcount && c > bestcells) || (z == bestcount && c == bestcells && rankOwner(ch) > rankOwner(bestowner))) {
-        bestowner = ch;
-        bestcount = z;
-			  bestcells = c; 
+    if (z > areacnt || (z == areacnt && c > cellcnt) || (z == areacnt && c == cellcnt && rankOwner(ch) > rankOwner(ans))) {
+        ans = ch;
+        areacnt = z;
+			  cellcnt = c; 
     }
 	}
 
@@ -92,6 +94,7 @@ int main() {
 	Solve();
 	// 여기서부터 작성 Write from here
 
-	cout << bestowner << " " << bestcount << "\n";// 출력하는 부분 Output
+	cout << ans << " " << areacnt << "\n";// 출력하는 부분 Output
 	return 0;
 }
+
