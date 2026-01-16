@@ -18,62 +18,48 @@ bool compare(int a, int b) {
 	return a < b;
 }
 
-/*
-int BinarySearch(int s, int e, int d) {
-	while(s<=e) {
-		int m=(s+e)/2;
-		if(A[m] == d) return m;
-		else if(A[m]>d) e=m-1;
-		else s=m+1;
-	}
-	return -1;
-}
-
-int BinarySearchLower(int s, int e, int d) {
-	int sol=-1;
-	while(s<=e) {
-		int m=(s+e)/2;
-		if(A[m]==d) {
-			sol = m;
-			e=m-1;
-		} 
-		else if(A[m]>d) e=m-1;
-		else s=m+1;
-	}
-	return sol;
-}
-
-int BinarySearchUpper(int s, int e, int d) {
-	int sol=-1;
-	while(s<=e) {
-		int m=(s+e)/2;
-		if(A[m]==d) {
-			sol=m;
-			s=s+1;
-		}
-		else if(A[m]>d) {
-			e=m-1;
-		} else {
-			s=m+1;
-		}
-	}
-}
-*/
-
-void Solve() {
+void sorting() {
 
 	sort(X, X+N, compare);
 }
 
+bool canCover(long long V) {
+    long long reachLen = 2LL * V;   // one use covers [start, start + 2V] if placed greedily
+    int used = 0;
+    int i = 0;
+
+    while (i < N) {
+        used++;
+        if (used > K) return false;
+
+        long long start = X[i];
+        long long end = start + reachLen;
+
+        // skip all points covered by this interval
+        while (i < N && X[i] <= end) i++;
+    }
+    return true;
+}
+
+long long Solve() {
+	
+	long long lo = 0, hi = 1000000000LL;
+    while (lo < hi) {
+        long long mid = (lo + hi) / 2;
+        if (canCover(mid)) hi = mid;
+        else lo = mid + 1;
+    }
+	
+	return lo;
+}
+
 int main() {
-	int ans = -1;
+	long long ans = -1;
 	InputData(); // 입력 받는 부분
 	
-	Solve();
+	sorting();
 
-	for(int i=0; i<N; i++)
-		cout << X[i] << " ";
-		cout << endl;
+	ans = Solve();
 	
 	// 여기서부터 작성
 	cout << ans << endl;// 출력하는 부분
