@@ -24,32 +24,29 @@ void sorting() {
 }
 
 bool canCover(long long V) {
-    long long reachLen = 2LL * V;   // one use covers [start, start + 2V] if placed greedily
-    int used = 0;
-    int i = 0;
-
-    while (i < N) {
-        used++;
-        if (used > K) return false;
-
-        long long start = X[i];
-        long long end = start + reachLen;
-
-        // skip all points covered by this interval
-        while (i < N && X[i] <= end) i++;
-    }
-    return true;
+	int i=0;
+	int used=0;
+	
+	while(i<N) {
+		used++;
+		if(used > K) return false;
+		long long start = X[i];
+		long long end = start + (2*V);
+		while(i<N && X[i] <= end) i++;
+	}
+	return true;
 }
 
 long long Solve() {
 	
-	long long lo = 0, hi = 1000000000LL;
-    while (lo < hi) {
-        long long mid = (lo + hi) / 2;
-        if (canCover(mid)) hi = mid;
-        else lo = mid + 1;
-    }
-	
+	// Must find the smallest V such that you can absorb all N objects using ≤ K uses
+	// Outputs the minimum possible absorption force V.
+	long long lo = 0, hi = 1000000000;
+	while(lo<hi) {
+		long long mid = (lo+hi)/2;
+		if(canCover(mid)) hi=mid;
+		else lo=mid+1; 
+	}
 	return lo;
 }
 
