@@ -61,11 +61,11 @@ vector<int> buildCostForBase(const Pos& base, const vector<Pos>& points) {
                 if (mask & bit) continue;
 
                 int moveCost = D[last][nxt] * (1 + load);
-                dp[mask | bit][nxt] = min(dp[mask | bit][nxt],
-                                          dp[mask][last] + moveCost);
+                dp[mask | bit][nxt] = min(dp[mask | bit][nxt], dp[mask][last] + moveCost);
             }
         }
     }
+	
 
     // Build cost[mask] using the same "return to S (node 0)" structure
     vector<int> cost(1 << N, INF);
@@ -79,6 +79,7 @@ vector<int> buildCostForBase(const Pos& base, const vector<Pos>& points) {
         // but with multiplier for return:
         int ans = INF;
         for (int last = 1; last <= N; last++) {
+					
             int bit = 1 << (last - 1);
             if ((mask & bit) == 0) continue;
 
@@ -105,15 +106,19 @@ int main() {
     vector<Pos> p(N);
     for (int i = 0; i < N; i++) cin >> p[i].x >> p[i].y;
 
-    int FULL = (1 << N) - 1;
 
     vector<int> cost0 = buildCostForBase(base0, p);
     vector<int> cost1 = buildCostForBase(base1, p);
 
-    int best = INF;
-    for (int mask = 0; mask <= FULL; mask++) {
-        best = min(best, cost0[mask] + cost1[FULL ^ mask]);
-    }
+	
+		int FULL = (1 << N) - 1;
+		int best = INF;
+
+		for (int mask0 = 0; mask0 <= FULL; mask0++) {
+    	int mask1 = FULL ^ mask0; // everything not in mask0 goes to base1
+    	best = min(best, cost0[mask0] + cost1[mask1]);
+		}
+
 
     cout << best << "\n";
     return 0;
