@@ -14,31 +14,30 @@ long long Solve() {
     long long ans = 0;
 
     // stack stores (mass, how many consecutive equal masses)
-    vector<pair<int,int>> st;
+    vector<int> st;
 
 
     for (int i = 0; i < N; i++) {
-        int h = W[i];
+        int h = W[i]; // 6 //3 
 
         // Remove smaller masses:
         // With the strict rule, current can connect to only the nearest one in each popped block.
-        while (!st.empty() && st.back().first < h) {
+        while (!st.empty() && st.back() < h) {
             ans += 1;
             st.pop_back();
         }
 
         if (st.empty()) {
-            st.push_back({h, 1});
+            st.push_back({h});
         }
-        else if (st.back().first == h) {
+        else if (st.back() == h) {
             // Strict rule: current can connect only to the immediate previous equal (adjacent)
             ans += 1;
-            st.back().second += 1;
         }
         else { // st.back().first > h
             // Can connect to the nearest taller one
             ans += 1;
-            st.push_back({h, 1});
+            st.push_back({h});
         }
     }
 
@@ -48,6 +47,7 @@ long long Solve() {
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
+		cout.tie(nullptr);
 
     InputData();
     cout << Solve() << "\n";
