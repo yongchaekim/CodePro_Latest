@@ -2,6 +2,7 @@
 #include <vector>
 #include <queue>
 #include <cmath>
+#include <algorithm>
 using namespace std;
 
 int main() {
@@ -31,9 +32,6 @@ int main() {
     while (!q.empty()) {
         int cur = q.front();
         q.pop();
-
-        if (cur == E1 && dist[E2] != -1) break;
-        if (cur == E2 && dist[E1] != -1) break;
 
         int d0 = cur / 1000;           // thousands
         int d1 = (cur / 100) % 10;     // hundreds
