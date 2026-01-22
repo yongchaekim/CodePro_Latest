@@ -42,25 +42,22 @@ int main() {
     points.push_back({0, 0});
 
     int enclosed = 0;
+		// Process each Direction
+    for (int i = 0; i < N; i++) {
+    int d = Info[i] - '0';
 
-    for (int i=0; i< N; i++) {
-        int d = Info[i] - '0';
+    P a = {x, y};
+    P b = {x + dx[d], y + dy[d]};
+    E e = make_edge(a, b);
 
-            int nx = x + dx[d];
-            int ny = y + dy[d];
-
-            P a = {x, y};
-            P b = {nx, ny};
-            E e = make_edge(a, b);
-
-            if (!containsEdge(edges, e)) {
-                if (containsPoint(points, b)) enclosed++; // new area formed
-                edges.push_back(e);
-                if (!containsPoint(points, b)) points.push_back(b);
-            }
-
-            x = nx; y = ny;
+    if (!containsEdge(edges, e)) {
+        if (containsPoint(points, b)) enclosed++;
+        edges.push_back(e);
+        if (!containsPoint(points, b)) points.push_back(b);
     }
+
+    	x = b.first; y = b.second;
+		}
 
     cout << enclosed << "\n";
     return 0;
