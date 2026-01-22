@@ -5,6 +5,8 @@
 using namespace std;
 
 int N;
+int dx[4] = {1, -1, 0, 0};   // 0:E, 1:W, 2:S, 3:N
+int dy[4] = {0, 0, -1, 1};
 string Info;
 
 using P = pair<int,int>;
@@ -28,11 +30,10 @@ bool containsEdge(const vector<E>& v, const E& e) {
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
+		cout.tie(nullptr);
 
-    cin >> N >> Info;
-
-    int dx[4] = {1, -1, 0, 0};   // 0:E, 1:W, 2:S, 3:N
-    int dy[4] = {0, 0, -1, 1};
+    cin >> N;
+		cin >> Info;
 
     int x = 0, y = 0;
 
@@ -42,8 +43,8 @@ int main() {
 
     int enclosed = 0;
 
-    for (char c : Info) {
-        int d = c - '0';
+    for (int i=0; i< N; i++) {
+        int d = Info[i] - '0';
 
         // split each move into 2 steps (handles mid-edge crossings)
         for (int k = 0; k < 2; k++) {
