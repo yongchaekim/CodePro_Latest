@@ -59,6 +59,55 @@ void Touch(int r, int c) {
     }
 }
 
+/*
+    int dr[8] = {-1,  1,  0,  0, -1, -1,  1,  1};
+int dc[8] = { 0,  0, -1,  1, -1,  1, -1,  1};
+
+void Touch(int r, int c) {
+    int V = (A[r][c] == 0) ? 1 : 0;
+    A[r][c] = V;
+
+    for (int k = 0; k < 8; k++) {
+        int nr = r, nc = c;
+        bool foundV = false;
+        bool bombBetween = false;
+
+        // Scan until we find first V or go out of bounds
+        while (true) {
+            nr += dr[k];
+            nc += dc[k];
+            if (nr < 0 || nr >= H || nc < 0 || nc >= W) break;
+
+            if (A[nr][nc] == 2) bombBetween = true;
+            if (A[nr][nc] == V) { foundV = true; break; }
+        }
+
+        if (!foundV) continue;
+
+        // Apply operation
+        nr = r; nc = c;
+
+        if (!bombBetween) {
+            // Fill only until the first V
+            while (true) {
+                nr += dr[k];
+                nc += dc[k];
+                if (A[nr][nc] == V) break;
+                A[nr][nc] = V;
+            }
+        } else {
+            // Bomb exists: fill ALL cells to the border
+            while (true) {
+                nr += dr[k];
+                nc += dc[k];
+                if (nr < 0 || nr >= H || nc < 0 || nc >= W) break;
+                A[nr][nc] = V; // bombs overwritten too
+            }
+        }
+    }
+}
+*/
+
 int Solve(void) {
     int cnt = 0;
     for (int i=0; i<N; i++) {
