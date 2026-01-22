@@ -46,8 +46,6 @@ int main() {
     for (int i=0; i< N; i++) {
         int d = Info[i] - '0';
 
-        // split each move into 2 steps (handles mid-edge crossings)
-        for (int k = 0; k < 2; k++) {
             int nx = x + dx[d];
             int ny = y + dy[d];
 
@@ -62,7 +60,6 @@ int main() {
             }
 
             x = nx; y = ny;
-        }
     }
 
     cout << enclosed << "\n";
