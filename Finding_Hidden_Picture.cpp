@@ -29,6 +29,11 @@ int Solve(void) {
 				if (ni < 0 || ni >= N) continue;
 				if (nj < 0 || nj >= N) continue;
 				if (a[ni][nj] != X2) continue;
+				int nni = ni + di[k];
+				int nnj = nj + dj[k];
+				if (nni < 0 || nni >= N) continue;
+				if (nnj < 0 || nnj >= N) continue;
+				if (a[nni][nnj] != X3) continue;
 				count++;
 			}
 		}
